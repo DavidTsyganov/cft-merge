@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.37">
+<file name="/home/dts/IdeaProjects/cft-merge/src/main/java/IntegerSorter.java">
+</file>
+<file name="/home/dts/IdeaProjects/cft-merge/src/main/java/Reader.java">
+<error line="5" column="5" severity="error" message="Class &apos;Reader&apos; looks like designed for extension (can be subclassed), but the method &apos;read&apos; does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class &apos;Reader&apos; final or making the method &apos;read&apos; static/final/abstract/empty, or adding allowed annotation for the method." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+</file>
+<file name="/home/dts/IdeaProjects/cft-merge/src/main/java/Sortable.java">
+</file>
+<file name="/home/dts/IdeaProjects/cft-merge/src/main/java/StringSorter.java">
+</file>
+</checkstyle>
