@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Writer {
-    public void writer(String outputFile, List list) {
+    public void write(List list, String outputFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             for (int i = 0; i < list.size(); i++) {
                 bufferedWriter.write(list.get(i) + "\n");
