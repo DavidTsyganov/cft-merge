@@ -20,7 +20,6 @@ public class Sorter {
     public static void merge(List<LineIterator> listOfIterators) throws IOException {
         List<Iterator> iteratorList = new ArrayList<>();
 
-        // Если список содержит только один итератор, то просто копируем содержимое в result.txt (потому что все уже отсортировано)
         if (listOfIterators.size() == 1) {
             while (listOfIterators.get(0).hasNext()) {
                 fileWriter.write(listOfIterators.get(0).next());
@@ -28,29 +27,33 @@ public class Sorter {
             }
             fileWriter.close();
         }
-//
-//        LinkedList<File> resultFiles = new LinkedList<>();
-//        int filesProcessed = 0;
-//        int i = 0;
-//        while (filesProcessed < listOfIterators.size()) {
-//
-//
-//
-//            File file = new File("interim_file" + i + ".txt");
-//            if (filesProcessed == 0) {
-//                file = mergeSortedLists(listOfIterators.get(filesProcessed++), listOfIterators.get(filesProcessed++), comparator);
-//            } else {
-//                file = mergeSortedLists(listOfIterators.getLast(), listOfIterators.get(filesProcessed++), comparator);
-//            }
-//            resultFiles.add(file);
-//            i++;
-//            String fileAsString = Files.readString(file.toPath());
-//            System.out.println(fileAsString);
-//            System.out.println(System.lineSeparator());
-//        }
-//
-//        File finalResultFile = resultFiles.removeLast();
-//        finalResultFile.renameTo(new File("final-result-file.txt"));
+
+        LinkedList<File> resultFiles = new LinkedList<>();
+        int filesProcessed = 0;
+        int i = 0;
+
+        while (filesProcessed < listOfIterators.size()) {
+            File tempFile1 = new File("src/main/java/temp_file1.txt");
+            File tempFile2 = new File("src/main/java/temp_file2.txt");
+
+            FileWriter localFileWriter1 = new FileWriter(tempFile1);
+            FileWriter localFileWriter2 = new FileWriter(tempFile2);
+
+            if (filesProcessed == 0) {
+                while ()
+                localFileWriter1.write(mergeTwoFiles(listOfIterators.get(filesProcessed++), listOfIterators.get(filesProcessed++), comparator));
+            } else {
+                file = mergeTwoFiles(listOfIterators.getLast(), listOfIterators.get(filesProcessed++), comparator);
+            }
+            resultFiles.add(file);
+            i++;
+            String fileAsString = Files.readString(file.toPath());
+            System.out.println(fileAsString);
+            System.out.println(System.lineSeparator());
+        }
+
+        File finalResultFile = resultFiles.removeLast();
+        finalResultFile.renameTo(new File("final-result-file.txt"));
     }
 
     public static <E extends Comparable<E>> void mergeTwoFiles(LineIterator iterator1,
