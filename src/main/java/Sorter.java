@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -17,7 +14,7 @@ public class Sorter {
         this.comparator = comparator;
     }
 
-    public static void merge(List<LineIterator> listOfIterators) throws IOException {
+    public static void merge(LinkedList<LineIterator> listOfIterators) throws IOException {
         List<Iterator> iteratorList = new ArrayList<>();
 
         if (listOfIterators.size() == 1) {
@@ -33,49 +30,55 @@ public class Sorter {
         int i = 0;
 
         while (filesProcessed < listOfIterators.size()) {
-            File tempFile1 = new File("src/main/java/temp_file1.txt");
-            File tempFile2 = new File("src/main/java/temp_file2.txt");
-
-            FileWriter localFileWriter1 = new FileWriter(tempFile1);
-            FileWriter localFileWriter2 = new FileWriter(tempFile2);
-
+            File tempFile = new File(UUID.randomUUID().toString());
             if (filesProcessed == 0) {
-                while ()
-                localFileWriter1.write(mergeTwoFiles(listOfIterators.get(filesProcessed++), listOfIterators.get(filesProcessed++), comparator));
+                tempFile = mergeTwoFiles(listOfIterators.get(filesProcessed++), listOfIterators.get(filesProcessed++), comparator, tempFile);
             } else {
-                file = mergeTwoFiles(listOfIterators.getLast(), listOfIterators.get(filesProcessed++), comparator);
+                tempFile = mergeTwoFiles(listOfIterators.getLast(), listOfIterators.get(filesProcessed++), comparator, tempFile);
             }
-            resultFiles.add(file);
-            i++;
-            String fileAsString = Files.readString(file.toPath());
-            System.out.println(fileAsString);
-            System.out.println(System.lineSeparator());
+            resultFiles.add(tempFile);
         }
 
         File finalResultFile = resultFiles.removeLast();
+        resultFiles.forEach(File::delete);
+        // Переделать потом
+        Reader resultReader = new FileReader(finalResultFile) {
+        };
+
+        FileWriter resultFileWriter = new FileWriter(finalResultFile);
+        LineIterator resultIterator = new LineIterator(resultReader);
+
+        while (resultIterator.hasNext()) {
+            resultFileWriter.write(resultIterator.next());
+            resultFileWriter.write(System.lineSeparator());
+        }
+
         finalResultFile.renameTo(new File("final-result-file.txt"));
     }
 
-    public static <E extends Comparable<E>> void mergeTwoFiles(LineIterator iterator1,
+    public static <E extends Comparable<E>> File mergeTwoFiles(LineIterator iterator1,
                                                                   LineIterator iterator2,
-                                        Comparator<Integer> comparator) throws IOException {
+                                        Comparator<Integer> comparator, File file) throws IOException {
 
         Integer value1 = Integer.valueOf(iterator1.hasNext() ? iterator1.next() : null);
         Integer value2 = Integer.valueOf(iterator2.hasNext() ? iterator2.next() : null);
+
+        FileWriter localFileWriter = new FileWriter(file);
 
         // Получим строки из файлов, пока в них есть значения
         while (value1 != null || value2 != null) {
             if (value2 == null || (value1 != null && comparator.compare(value1, value2) <= 0)) {
 
-                fileWriter.write(String.valueOf(value1));
-                fileWriter.write(System.lineSeparator());
+                localFileWriter.write(String.valueOf(value1));
+                localFileWriter.write(System.lineSeparator());
                 value1 = (iterator1.hasNext() ? Integer.valueOf(iterator1.next()) : null);
             } else {
-                fileWriter.write(String.valueOf(value2));
-                fileWriter.write(System.lineSeparator());
+                localFileWriter.write(String.valueOf(value2));
+                localFileWriter.write(System.lineSeparator());
                 value2 = (iterator2.hasNext() ? Integer.valueOf(iterator2.next()) : null);
             }
         }
-        fileWriter.close();
+        localFileWriter.close();
+        return file;
     }
 }
